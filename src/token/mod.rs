@@ -5,13 +5,26 @@
 pub enum TokenType {
     Illegal,
     Eof,
+    // Identifers + literals
     Ident,
     Int,
-    // Add more token types as needed.
+    // Operators
+    Assign,
+    Plus,
+    // Delimiters
+    Coma,
+    Semicolon,
+    Lparen,
+    Rparen,
+    Lbrace,
+    Rbrace,
+    // Keywords
+    Function,
+    Let,
 }
 
 // Define Token struct
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Token {
     pub token_type: TokenType,
     pub literal: String,
