@@ -1,5 +1,3 @@
-// src/token/mod.rs
-
 // Define TokenType as an enum
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum TokenType {

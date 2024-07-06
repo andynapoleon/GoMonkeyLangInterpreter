@@ -1,6 +1,5 @@
-// src/main.rs
-
-// Import the token module
+// Import the modules
+mod lexer;
 mod token;
 
 use token::{Token, TokenType};
