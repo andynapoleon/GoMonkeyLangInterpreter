@@ -1,5 +1,5 @@
 // Define TokenType as an enum
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum TokenType {
     Illegal,
     Eof,
@@ -10,7 +10,7 @@ pub enum TokenType {
     Assign,
     Plus,
     // Delimiters
-    Coma,
+    Comma,
     Semicolon,
     Lparen,
     Rparen,
@@ -30,10 +30,15 @@ pub struct Token {
 
 // Implement a constructor for Token
 impl Token {
-    pub fn new(token_type: TokenType, literal: String) -> Self {
+    pub fn new(token_type: TokenType, literal: Option<char>) -> Self {
+        let literal_str = if let Some(literal_char) = literal {
+            literal_char.to_string()
+        } else {
+            String::new()
+        };
         Token {
             token_type,
-            literal,
+            literal: literal_str,
         }
     }
 }
