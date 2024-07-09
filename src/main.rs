@@ -1,9 +1,8 @@
+use rust_monkey::repl::*;
 use std::env;
 use std::io;
 use std::io::BufReader;
 use std::process;
-
-use rust_monkey::repl::*;
 
 fn main() {
     let user = match env::var("USER") {
