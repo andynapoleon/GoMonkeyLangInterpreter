@@ -40,7 +40,23 @@ impl Lexer {
     pub fn next_token(&mut self) -> Token {
         self.skip_white_space();
         let tok: Token = match self.ch {
-            Some('=') => Token::new(TokenType::Assign, self.ch),
+            Some('=') => {
+                if let Some(c) = self.peek_char() {
+                    if c == '=' {
+                        self.read_char();
+                        Token {
+                            token_type: TokenType::Eq,
+                            literal: "==".to_owned(),
+                        }
+                    // if next char is some other char
+                    } else {
+                        Token::new(TokenType::Assign, self.ch)
+                    }
+                // if next char is None
+                } else {
+                    Token::new(TokenType::Assign, self.ch)
+                }
+            }
             Some(';') => Token::new(TokenType::Semicolon, self.ch),
             Some('(') => Token::new(TokenType::Lparen, self.ch),
             Some(')') => Token::new(TokenType::Rparen, self.ch),
@@ -49,7 +65,23 @@ impl Lexer {
             Some('{') => Token::new(TokenType::Lbrace, self.ch),
             Some('}') => Token::new(TokenType::Rbrace, self.ch),
             Some('-') => Token::new(TokenType::Minus, self.ch),
-            Some('!') => Token::new(TokenType::Bang, self.ch),
+            Some('!') => {
+                if let Some(c) = self.peek_char() {
+                    if c == '=' {
+                        self.read_char();
+                        Token {
+                            token_type: TokenType::NotEq,
+                            literal: "!=".to_owned(),
+                        }
+                    // if next char is some other char
+                    } else {
+                        Token::new(TokenType::Bang, self.ch)
+                    }
+                // if next char is None
+                } else {
+                    Token::new(TokenType::Bang, self.ch)
+                }
+            }
             Some('*') => Token::new(TokenType::Asterisk, self.ch),
             Some('/') => Token::new(TokenType::Slash, self.ch),
             Some('<') => Token::new(TokenType::Lt, self.ch),
@@ -58,7 +90,6 @@ impl Lexer {
             Some(c) => {
                 if is_letter(c) {
                     let literal = self.read_identifier();
-                    println!("CURRENT LITERAL: {:?}", literal);
                     Token {
                         token_type: look_up_ident(literal.clone()),
                         literal,
@@ -127,6 +158,15 @@ impl Lexer {
             }
         }
     }
+
+    // Look ahead into the input, but don't move the pointer
+    pub fn peek_char(&mut self) -> Option<char> {
+        if self.read_position >= self.input.len() {
+            None
+        } else {
+            self.input.chars().nth(self.read_position)
+        }
+    }
 }
 
 #[cfg(test)]
@@ -152,6 +192,9 @@ mod tests {
         } else {
             return false;
         }
+
+        10 == 10;
+        10 != 9;
         ";
 
         struct ExpectedToken {
@@ -421,42 +464,42 @@ mod tests {
             expected_token_type: TokenType::Rbrace,
             expected_literal: "}".to_owned(),
         });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Int,
-        //     expected_literal: "10".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Eq,
-        //     expected_literal: "==".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Int,
-        //     expected_literal: "10".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Semicolon,
-        //     expected_literal: ";".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Int,
-        //     expected_literal: "10".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::NotEq,
-        //     expected_literal: "!=".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Int,
-        //     expected_literal: "9".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Semicolon,
-        //     expected_literal: ";".to_owned(),
-        // });
-        // tests.push(ExpectedToken {
-        //     expected_token_type: TokenType::Eof,
-        //     expected_literal: "".to_owned(),
-        // });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "10".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Eq,
+            expected_literal: "==".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "10".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Semicolon,
+            expected_literal: ";".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "10".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::NotEq,
+            expected_literal: "!=".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "9".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Semicolon,
+            expected_literal: ";".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Eof,
+            expected_literal: "".to_owned(),
+        });
 
         let mut l = Lexer::new(input.to_owned());
 
