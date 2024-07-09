@@ -48,10 +48,17 @@ impl Lexer {
             Some('+') => Token::new(TokenType::Plus, self.ch),
             Some('{') => Token::new(TokenType::Lbrace, self.ch),
             Some('}') => Token::new(TokenType::Rbrace, self.ch),
+            Some('-') => Token::new(TokenType::Minus, self.ch),
+            Some('!') => Token::new(TokenType::Bang, self.ch),
+            Some('*') => Token::new(TokenType::Asterisk, self.ch),
+            Some('/') => Token::new(TokenType::Slash, self.ch),
+            Some('<') => Token::new(TokenType::Lt, self.ch),
+            Some('>') => Token::new(TokenType::Gt, self.ch),
             // ident + keyword case
             Some(c) => {
                 if is_letter(c) {
                     let literal = self.read_identifier();
+                    println!("CURRENT LITERAL: {:?}", literal);
                     Token {
                         token_type: look_up_ident(literal.clone()),
                         literal,
@@ -62,7 +69,7 @@ impl Lexer {
                         literal: self.read_number(),
                     }
                 } else {
-                    Token::new(TokenType::Illegal, Some(c))
+                    Token::new(TokenType::Illegal, self.ch)
                 }
             }
             // illegal char
@@ -73,6 +80,11 @@ impl Lexer {
             && tok.token_type != TokenType::Let
             && tok.token_type != TokenType::Int
             && tok.token_type != TokenType::Ident
+            && tok.token_type != TokenType::True
+            && tok.token_type != TokenType::False
+            && tok.token_type != TokenType::If
+            && tok.token_type != TokenType::Else
+            && tok.token_type != TokenType::Return
         {
             self.read_char();
         }
@@ -126,12 +138,20 @@ mod tests {
     fn test_next_token() {
         let input = "let five = 5;
         let ten = 10;
-
+        
         let add = fn(x, y) {
-            x + y;
+          x + y;
         };
-
+        
         let result = add(five, ten);
+        !-/*5;
+        5 < 10 > 5;
+
+        if (5 < 10) {
+            return true;
+        } else {
+            return false;
+        }
         ";
 
         struct ExpectedToken {
@@ -286,11 +306,158 @@ mod tests {
             expected_literal: ";".to_owned(),
         });
         tests.push(ExpectedToken {
-            expected_token_type: TokenType::Eof,
-            expected_literal: "".to_owned(),
+            expected_token_type: TokenType::Bang,
+            expected_literal: "!".to_owned(),
         });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Minus,
+            expected_literal: "-".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Slash,
+            expected_literal: "/".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Asterisk,
+            expected_literal: "*".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "5".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Semicolon,
+            expected_literal: ";".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "5".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Lt,
+            expected_literal: "<".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "10".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Gt,
+            expected_literal: ">".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "5".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Semicolon,
+            expected_literal: ";".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::If,
+            expected_literal: "if".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Lparen,
+            expected_literal: "(".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "5".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Lt,
+            expected_literal: "<".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Int,
+            expected_literal: "10".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Rparen,
+            expected_literal: ")".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Lbrace,
+            expected_literal: "{".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Return,
+            expected_literal: "return".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::True,
+            expected_literal: "true".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Semicolon,
+            expected_literal: ";".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Rbrace,
+            expected_literal: "}".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Else,
+            expected_literal: "else".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Lbrace,
+            expected_literal: "{".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Return,
+            expected_literal: "return".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::False,
+            expected_literal: "false".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Semicolon,
+            expected_literal: ";".to_owned(),
+        });
+        tests.push(ExpectedToken {
+            expected_token_type: TokenType::Rbrace,
+            expected_literal: "}".to_owned(),
+        });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Int,
+        //     expected_literal: "10".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Eq,
+        //     expected_literal: "==".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Int,
+        //     expected_literal: "10".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Semicolon,
+        //     expected_literal: ";".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Int,
+        //     expected_literal: "10".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::NotEq,
+        //     expected_literal: "!=".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Int,
+        //     expected_literal: "9".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Semicolon,
+        //     expected_literal: ";".to_owned(),
+        // });
+        // tests.push(ExpectedToken {
+        //     expected_token_type: TokenType::Eof,
+        //     expected_literal: "".to_owned(),
+        // });
 
-        // let input = "=+(){},;";
         let mut l = Lexer::new(input.to_owned());
 
         for (i, tt) in tests.iter().enumerate() {

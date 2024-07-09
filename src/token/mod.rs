@@ -3,12 +3,18 @@
 pub enum TokenType {
     Illegal,
     Eof,
-    // Identifers + literals
+    // Identifiers + literals
     Ident,
     Int,
     // Operators
     Assign,
     Plus,
+    Minus,
+    Bang,
+    Asterisk,
+    Slash,
+    Lt,
+    Gt,
     // Delimiters
     Comma,
     Semicolon,
@@ -19,6 +25,11 @@ pub enum TokenType {
     // Keywords
     Function,
     Let,
+    True,
+    False,
+    If,
+    Else,
+    Return,
 }
 
 // Define Token struct
