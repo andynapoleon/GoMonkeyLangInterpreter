@@ -169,6 +169,7 @@ impl Lexer {
     }
 }
 
+// TEST
 #[cfg(test)]
 mod tests {
     // Include names from outer scope
