@@ -34,5 +34,6 @@ pub fn look_up_ident(ident: String) -> TokenType {
 // Declare the modules
 pub mod ast;
 pub mod lexer;
+pub mod parser;
 pub mod repl;
 pub mod token;

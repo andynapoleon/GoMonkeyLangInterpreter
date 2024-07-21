@@ -23,7 +23,8 @@ pub impl Node for Program {
         if self.statements.len() > 0 {
             self.statements[0].token_literal()
         } else {
-            ""
+            static EMPTY: &str = "";
+            EMPTY
         }
     }
 }
