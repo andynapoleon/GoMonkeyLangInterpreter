@@ -1,6 +1,7 @@
 // Define TokenType as an enum
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum TokenType {
+    Default,
     Illegal,
     Eof,
     // Identifiers + literals
@@ -43,6 +44,12 @@ pub struct Token {
 
 // Implement a constructor for Token
 impl Token {
+    pub fn default() -> Self {
+        Self {
+            token_type: TokenType::Default,
+            literal: "".to_owned(),
+        }
+    }
     pub fn new(token_type: TokenType, literal: Option<char>) -> Self {
         let literal_str = if let Some(literal_char) = literal {
             literal_char.to_string()

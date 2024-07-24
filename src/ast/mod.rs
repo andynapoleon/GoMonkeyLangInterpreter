@@ -48,8 +48,8 @@ impl Node for Identifier {
 // Let Statement - implements Statement node
 pub struct LetStatement {
     pub token: Token,
-    pub name: Box<Identifier>,
-    pub value: Box<dyn Expression>,
+    pub name: Option<Box<Identifier>>,
+    pub value: Option<Box<dyn Expression>>,
 }
 
 impl Statement for LetStatement {
