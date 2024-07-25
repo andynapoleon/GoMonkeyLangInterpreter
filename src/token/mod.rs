@@ -44,12 +44,6 @@ pub struct Token {
 
 // Implement a constructor for Token
 impl Token {
-    pub fn default() -> Self {
-        Self {
-            token_type: TokenType::Default,
-            literal: "".to_owned(),
-        }
-    }
     pub fn new(token_type: TokenType, literal: Option<char>) -> Self {
         let literal_str = if let Some(literal_char) = literal {
             literal_char.to_string()
@@ -59,6 +53,16 @@ impl Token {
         Token {
             token_type,
             literal: literal_str,
+        }
+    }
+}
+
+// Implement Default for Token
+impl Default for Token {
+    fn default() -> Self {
+        Self {
+            token_type: TokenType::Default,
+            literal: String::new(),
         }
     }
 }

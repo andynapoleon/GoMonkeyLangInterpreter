@@ -4,16 +4,16 @@ use crate::token::*;
 
 pub struct Parser<'a> {
     l: &'a mut Lexer,
-    cur_token: Option<Token>,
-    peek_token: Option<Token>,
+    cur_token: Token,
+    peek_token: Token,
 }
 
 impl<'a> Parser<'a> {
     pub fn new(l: &'a mut Lexer) -> Self {
         let mut p = Parser {
             l,
-            cur_token: None,
-            peek_token: None,
+            cur_token: Default::default(),
+            peek_token: Default::default(),
         };
         // Read two tokens, so cur_token and peek_token are both set
         p.next_token();
@@ -22,59 +22,54 @@ impl<'a> Parser<'a> {
     }
 
     fn next_token(&mut self) {
-        self.cur_token = std::mem::replace(&mut self.peek_token, Some(self.l.next_token()));
+        self.cur_token = std::mem::replace(&mut self.peek_token, self.l.next_token());
     }
 
     // Constructing the root node of the AST
-    pub fn parse_program(&mut self) -> Program {
-        let program = Program {
+    pub fn parse_program(&mut self) -> Option<Program> {
+        let mut program = Program {
             statements: Vec::new(),
         };
-        while let Some(cur_token) = self.cur_token {
-            if cur_token.token_type != TokenType::Eof {
-                let stmt = self.parse_statement();
-                match stmt {
-                    Some(value) => program.statements.add(value),
-                    None => (),
-                }
-                self.next_token();
-            } else {
-                break;
+
+        while self.cur_token.token_type != TokenType::Eof {
+            if let Some(stmt) = self.parse_statement() {
+                program.statements.push(stmt);
             }
+            self.next_token();
         }
-        program
+
+        Some(program)
     }
 
     // Parse a statement
     pub fn parse_statement(&mut self) -> Option<Box<dyn Statement>> {
         match self.cur_token.token_type {
-            Some(TokenType::Let) => self.parse_let_statement(),
-            Some(_) => (),
-            None => (),
+            TokenType::Let => self
+                .parse_let_statement()
+                .map(|stmt| Box::new(stmt) as Box<dyn Statement>),
+            _ => None,
         }
     }
 
     // Parse a let statement
     pub fn parse_let_statement(&mut self) -> Option<LetStatement> {
-        let stmt = LetStatement {
-            token: self.cur_token.unwrap(),
-            name: None,
-            value: None,
+        let mut stmt = LetStatement {
+            token: self.cur_token.clone(),
+            name: Box::new(Identifier::default()),
+            value: Default::default(),
         };
 
         if !self.expect_peek(TokenType::Ident) {
-            None
+            return None;
         }
 
-        if let Some(cur_token) = self.cur_token {
-            stmt.name = Identifier {
-                token: cur_token,
-                value: cur_token.literal,
-            }
-        }
+        stmt.name = Box::new(Identifier {
+            token: self.cur_token.clone(),
+            value: self.cur_token.literal.clone(),
+        });
 
         if !self.expect_peek(TokenType::Assign) {
-            None
+            return None;
         }
 
         while !self.cur_token_is(TokenType::Semicolon) {
@@ -85,15 +80,11 @@ impl<'a> Parser<'a> {
     }
 
     pub fn cur_token_is(&mut self, t: TokenType) -> bool {
-        if let Some(cur_token) = self.cur_token {
-            cur_token.token_type == t
-        }
+        self.cur_token.token_type == t
     }
 
     pub fn peek_token_is(&mut self, t: TokenType) -> bool {
-        if let Some(peek_token) = self.peek_token {
-            peek_token.token_type == t
-        }
+        self.peek_token.token_type == t
     }
 
     pub fn expect_peek(&mut self, t: TokenType) -> bool {

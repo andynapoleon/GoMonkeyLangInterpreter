@@ -29,6 +29,25 @@ impl Node for Program {
     }
 }
 
+// Default Expression Trait implementation:
+pub struct DefaultExpression;
+
+impl Expression for DefaultExpression {
+    fn expression_node(&self) {}
+}
+
+impl Node for DefaultExpression {
+    fn token_literal(&self) -> &str {
+        "default"
+    }
+}
+
+impl Default for Box<dyn Expression> {
+    fn default() -> Self {
+        Box::new(DefaultExpression)
+    }
+}
+
 // Identifier - implements an expression node
 pub struct Identifier {
     pub token: Token,
@@ -45,11 +64,20 @@ impl Node for Identifier {
     }
 }
 
+impl Default for Identifier {
+    fn default() -> Self {
+        Self {
+            token: Token::default(),
+            value: String::new(),
+        }
+    }
+}
+
 // Let Statement - implements Statement node
 pub struct LetStatement {
     pub token: Token,
-    pub name: Option<Box<Identifier>>,
-    pub value: Option<Box<dyn Expression>>,
+    pub name: Box<Identifier>,
+    pub value: Box<dyn Expression>,
 }
 
 impl Statement for LetStatement {
@@ -59,5 +87,15 @@ impl Statement for LetStatement {
 impl Node for LetStatement {
     fn token_literal(&self) -> &str {
         &self.token.literal
+    }
+}
+
+impl Default for LetStatement {
+    fn default() -> Self {
+        Self {
+            token: Token::default(),
+            name: Box::new(Identifier::default()),
+            value: Default::default(),
+        }
     }
 }
