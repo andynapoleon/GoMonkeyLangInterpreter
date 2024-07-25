@@ -29,7 +29,7 @@ impl Node for Program {
     }
 }
 
-// Default Expression Trait implementation:
+// Default Expression Trait implementation
 pub struct DefaultExpression;
 
 impl Expression for DefaultExpression {
@@ -48,7 +48,7 @@ impl Default for Box<dyn Expression> {
     }
 }
 
-// Identifier - implements an expression node
+// Identifier - implements Expression
 pub struct Identifier {
     pub token: Token,
     pub value: String,
@@ -73,7 +73,7 @@ impl Default for Identifier {
     }
 }
 
-// Let Statement - implements Statement node
+// Let Statement - implements Statement
 pub struct LetStatement {
     pub token: Token,
     pub name: Box<Identifier>,
