@@ -1,4 +1,4 @@
-# 🐵 Rust Monkey Interpreter
+# 🐵 Rust Monkey Interpreter 🍌
 
 This project is still 🚧 **UNDER CONSTRUCTION** 🛠️!
 
