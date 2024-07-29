@@ -71,17 +71,11 @@ Contributions are welcome! Please follow these steps to contribute:
 4. Push to the branch: `git push origin my-feature-branch`
 5. Create a pull request.
 
-Please make sure to update tests as appropriate.
-
-## 📄 Licensing
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## 📞 Contact
 
 If you have any questions, feel free to reach out:
 
-- Email: `anhquoctram006@gmail.com`
+- Email: `anhquoctran006@gmail.com`
 - GitHub: [andynapoleon](https://github.com/andynapoleon)
 
 ## 📚 Acknowledgements
