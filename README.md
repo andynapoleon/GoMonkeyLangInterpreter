@@ -59,6 +59,7 @@ let fibonacci = fn(x) {
     }
 };
 fibonacci(10); // Outputs: 55
+```
 
 ## 🧑‍💻 Contributing
 
