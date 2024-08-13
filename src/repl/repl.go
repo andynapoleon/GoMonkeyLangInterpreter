@@ -4,8 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"monkey/lexer"
-	"monkey/token"
+
+	"github.com/andynapoleon/GoMonkeyLangInterpreter/lexer"
+	"github.com/andynapoleon/GoMonkeyLangInterpreter/token"
 )
 
 const PROMPT = ">> "
@@ -14,7 +15,7 @@ func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
 	for {
-		fmt.Printf(PROMPT)
+		fmt.Print(PROMPT)
 		scanned := scanner.Scan()
 		if !scanned {
 			return
