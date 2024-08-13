@@ -1,14 +1,14 @@
-# 🐵 Rust Monkey Interpreter 🍌
+# 🐵 Go Monkey Interpreter 🍌
 
 This project is still 🚧 **UNDER CONSTRUCTION** 🛠️!
 
-Welcome to the Rust Monkey Interpreter! This project is an interpreter for the Monkey Programming Language, built using Rust. It is inspired by Thorsten Ball's "Write An Interpreter In Go".
+Welcome to the Go Monkey Interpreter! This project is an interpreter for the Monkey Programming Language, built using Go. It is based on Thorsten Ball's "Writing An Interpreter In Go".
 
 ## 🚀 Features
 
 - Interprets the Monkey programming language
 - Supports arithmetic operations, conditionals, and more
-- Written in Rust for performance and safety
+- Written in Go for simplicity and efficiency
 
 ## 📚 About the Monkey Programming Language
 
@@ -24,19 +24,18 @@ Monkey is a simple, high-level programming language designed to teach the concep
 
 ## 🛠 Installation
 
-To get started with the Rust Monkey Interpreter, follow these steps:
+To get started with the Go Monkey Interpreter, follow these steps:
 
 1. **Clone the repository**:
-
     ```sh
-    git clone https://github.com/andynapoleon/RustMonkeyLangInterpreter
-    cd RustMonkeyLangInterpreter
+    git clone https://github.com/yourusername/GoMonkeyLangInterpreter
+    cd GoMonkeyLangInterpreter
     ```
 
 2. **Build and run the project**:
-
     ```sh
-    cargo run
+    go build
+    ./GoMonkeyLangInterpreter
     ```
 
 ## 📝 Usage
