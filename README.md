@@ -28,7 +28,7 @@ To get started with the Go Monkey Interpreter, follow these steps:
 
 1. **Clone the repository**:
     ```sh
-    git clone https://github.com/yourusername/GoMonkeyLangInterpreter
+    git clone https://github.com/andynapoleon/GoMonkeyLangInterpreter.git
     cd GoMonkeyLangInterpreter
     ```
 
