@@ -29,13 +29,12 @@ To get started with the Go Monkey Interpreter, follow these steps:
 1. **Clone the repository**:
     ```sh
     git clone https://github.com/andynapoleon/GoMonkeyLangInterpreter.git
-    cd GoMonkeyLangInterpreter
+    cd GoMonkeyLangInterpreter/src
     ```
 
 2. **Build and run the project**:
     ```sh
-    go build
-    ./GoMonkeyLangInterpreter
+    make run
     ```
 
 ## 📝 Usage
