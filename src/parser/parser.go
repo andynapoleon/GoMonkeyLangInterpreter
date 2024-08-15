@@ -13,7 +13,8 @@ type Parser struct {
 	peekToken token.Token
 }
 
-func New(l *lexer.Lexer) *Parser {
+// Create a new Parser structure
+func New(l *lexer.Lexer) *Parser { // takes in a lexer
 	p := &Parser{l: l} // curToken and peekToken are 0
 	// Read two tokens, so curToken and peekToken are both set
 	p.nextToken()
@@ -21,11 +22,39 @@ func New(l *lexer.Lexer) *Parser {
 	return p
 }
 
+// Move to next token in the lexer
 func (p *Parser) nextToken() {
 	p.curToken = p.peekToken
 	p.peekToken = p.l.NextToken()
 }
 
-func (p Parser) ParseProgram() *ast.Program {
+// Parse a program
+func (p *Parser) ParseProgram() *ast.Program {
+	program := &ast.Program{}
+	program.Statements = []ast.Statement{}
+
+	for p.curToken.Type != token.EOF {
+		stmt := p.parseStatement()
+		if stmt != nil {
+			program.Statements = append(program.Statements, stmt)
+		}
+		p.nextToken()
+	}
+	return program
+}
+
+// Parse a statement
+func (p *Parser) parseStatement() ast.Statement {
+	switch p.curToken.Type {
+	case token.LET:
+		return p.parseLetStatement()
+	default:
+		return nil
+	}
+
+}
+
+// Parse a LET statement
+func (p *Parser) parseLetStatement() *ast.LetStatement {
 	return nil
 }
